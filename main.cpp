@@ -12,6 +12,9 @@
 // グローバル変数定義ゾーン
 // ------------------------------------
 
+// マウス情報
+int MouseX, MouseY;		// マウスのXY座標
+
 // ------------------------------------
 // 関数定義ゾーン
 // ------------------------------------
@@ -20,6 +23,69 @@
 int GetRandom(int min, int max)
 {
 	return min + (int)(rand() * (max - min + 1.0) / (1.0 + RAND_MAX));
+}
+
+// マウスクリックされたかを判定する関数
+BOOL ClickMouse(int button)
+{
+	switch (button)
+	{
+		// 左クリックのとき
+		case 0:
+			if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0)
+			{
+				return TRUE;
+			}
+			else
+			{
+				return FALSE;
+			}
+		case 1:
+			if ((GetMouseInput() & MOUSE_INPUT_MIDDLE) != 0)
+			{
+				return TRUE;
+			}
+			else
+			{
+				return FALSE;
+			}
+		case 2:
+			if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0)
+			{
+				return TRUE;
+			}
+			else
+			{
+				return FALSE;
+			}
+
+		default:
+			return FALSE;
+	}
+}
+
+// ボタンを表示する関数
+BOOL DrawButton(int beginX, int beginY, int endX, int endY, unsigned int color, int mouseButton)
+{
+	// マウスがボタンの範囲内にあるとき
+	if (MouseX >= beginX && MouseX <= endX && MouseY >= beginY && MouseY <= endY)
+	{
+		// 側を表示
+		DrawBox(beginX, beginY, endX, endY, color, FALSE);
+
+		// 指定のマウスボタンが押されたらTRUE
+		if (ClickMouse(mouseButton))
+		{
+			return TRUE;
+		}
+	}
+	else
+	{
+		// 側を表示（透過）
+		DrawBox(beginX, beginY, endX, endY, color, TRUE);
+	}
+
+	return FALSE;
 }
 
 // メイン関数
@@ -57,9 +123,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// キーボード情報
 	char keyState[256];		// キーボード情報を格納する配列
 	char oldKeyState[256];	// ひとつ前のキーボード情報を格納する配列
-
-	// マウス情報
-	int MouseX, MouseY;		// マウスのXY座標
 
 	// フラグ
 	BOOL isClick = FALSE;	// 音がなったか
@@ -119,13 +182,33 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		if (nowTime % (int)(1000 / bpmRatio) < oldTime % (int)(1000 / bpmRatio))
 		{
 			PlaySoundMem(sound_wood_block, DX_PLAYTYPE_BACK);
+			/*
 			DrawBox(
 				SCREEN_WIDTH * 1 >> 2, SCREEN_HEIGHT * 1 >> 2,
 				SCREEN_WIDTH * 3 >> 2, SCREEN_HEIGHT * 3 >> 2,
 				colorWhite, TRUE
 			);
+			*/
 
 			isClick = TRUE;
+		}
+
+		// 左のボタン
+		if (DrawButton(SCREEN_WIDTH * 4 >> 4, SCREEN_HEIGHT * 10 >> 4,
+			SCREEN_WIDTH * 6 >> 4, SCREEN_HEIGHT * 12 >> 4,
+			colorWhite, 0))
+		{
+			bpm--;
+			printfDx("クリック！！！！！");
+		}
+		
+		// 右のボタン
+		if (DrawButton(SCREEN_WIDTH * 10 >> 4, SCREEN_HEIGHT * 10 >> 4,
+			SCREEN_WIDTH * 12 >> 4, SCREEN_HEIGHT * 12 >> 4,
+			colorWhite, 0))
+		{
+			bpm++;
+			printfDx("クリック！！！！！");
 		}
 
 		// 簡易画面表示
@@ -133,6 +216,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		printfDx("BPM %d\n", bpm);
 		printfDx("BPMの比率 %f\n", bpmRatio);
 		printfDx("%f\n", 1000 / bpmRatio);
+		printfDx("マウスカーソル X %d Y %d\n", MouseX, MouseY);
 		
 		// ------------------------------------
 		// 後処理
