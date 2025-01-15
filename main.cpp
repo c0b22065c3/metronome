@@ -27,6 +27,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 {
 	ChangeWindowMode(TRUE); // ウィンドウモードに設定
 	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16); // 解像度の変更
+	SetMainWindowText("メトロノーム"); // ウィンドウのタイトルを変更
 
 	if (DxLib_Init() == -1) // DxLib初期化
 	{
