@@ -22,6 +22,45 @@ int GetRandom(int min, int max)
 	return min + (int)(rand() * (max - min + 1.0) / (1.0 + RAND_MAX));
 }
 
+// マウスクリックされたかを判定する関数
+BOOL ClickMouse(int button)
+{
+	switch (button)
+	{
+		// 左クリックのとき
+		case 0:
+			if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0)
+			{
+				return TRUE;
+			}
+			else
+			{
+				return FALSE;
+			}
+		case 1:
+			if ((GetMouseInput() & MOUSE_INPUT_MIDDLE) != 0)
+			{
+				return TRUE;
+			}
+			else
+			{
+				return FALSE;
+			}
+		case 2:
+			if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0)
+			{
+				return TRUE;
+			}
+			else
+			{
+				return FALSE;
+			}
+
+		default:
+			return FALSE;
+	}
+}
+
 // メイン関数
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -132,6 +171,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		printfDx("BPM %d\n", bpm);
 		printfDx("BPMの比率 %f\n", bpmRatio);
 		printfDx("%f\n", 1000 / bpmRatio);
+		printfDx("マウスカーソル X %d Y %d\n", MouseX, MouseY);
 		
 		// ------------------------------------
 		// 後処理
