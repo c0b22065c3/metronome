@@ -2,38 +2,39 @@
 #include "math.h"
 #include "time.h"
 
-// ’è”
+// å®šæ•°
 #define SCREEN_WIDTH	800
 #define SCREEN_HEIGHT	600
 
-#define STANDARD_BPM	60	// Šî€‚Æ‚È‚éBPM = 60
+#define STANDARD_BPM	60	// åŸºæº–ã¨ãªã‚‹BPM = 60
+#define MAX_BPM		400	// æœ€å¤§BPM = 400
 
-#define FONT_SIZE		64	// ƒtƒHƒ“ƒg‚ÌƒTƒCƒY
-#define FONT_THICK		3	// ƒtƒHƒ“ƒg‚Ì‘¾‚³
-
-// ------------------------------------
-// ƒOƒ[ƒoƒ‹•Ï”’è‹`ƒ][ƒ“
-// ------------------------------------
-
-// ƒ}ƒEƒXî•ñ
-int MouseX, MouseY;		// ƒ}ƒEƒX‚ÌXYÀ•W
+#define FONT_SIZE	64	// ãƒ•ã‚©ãƒ³ãƒˆã®ã‚µã‚¤ã‚º
+#define FONT_THICK	3	// ãƒ•ã‚©ãƒ³ãƒˆã®å¤ªã•
 
 // ------------------------------------
-// ŠÖ”’è‹`ƒ][ƒ“
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°å®šç¾©ã‚¾ãƒ¼ãƒ³
 // ------------------------------------
 
-// —”‚ğæ“¾‚·‚éŠÖ”
+// ãƒã‚¦ã‚¹æƒ…å ±
+int MouseX, MouseY;		// ãƒã‚¦ã‚¹ã®XYåº§æ¨™
+
+// ------------------------------------
+// é–¢æ•°å®šç¾©ã‚¾ãƒ¼ãƒ³
+// ------------------------------------
+
+// ä¹±æ•°ã‚’å–å¾—ã™ã‚‹é–¢æ•°
 int GetRandom(int min, int max)
 {
 	return min + (int)(rand() * (max - min + 1.0) / (1.0 + RAND_MAX));
 }
 
-// ƒ}ƒEƒXƒNƒŠƒbƒN‚³‚ê‚½‚©‚ğ”»’è‚·‚éŠÖ”
+// ãƒã‚¦ã‚¹ã‚¯ãƒªãƒƒã‚¯ã•ã‚ŒãŸã‹ã‚’åˆ¤å®šã™ã‚‹é–¢æ•°
 BOOL ClickMouse(int button)
 {
 	switch (button)
 	{
-		// ¶ƒNƒŠƒbƒN‚Ì‚Æ‚«
+		// å·¦ã‚¯ãƒªãƒƒã‚¯ã®ã¨ã
 		case 0:
 			if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0)
 			{
@@ -67,7 +68,7 @@ BOOL ClickMouse(int button)
 	}
 }
 
-// ƒ}ƒEƒX‚ª”ÍˆÍ“à‚É“ü‚Á‚Ä‚¢‚é‚©‚ğ”»’è‚·‚éŠÖ”
+// ãƒã‚¦ã‚¹ãŒç¯„å›²å†…ã«å…¥ã£ã¦ã„ã‚‹ã‹ã‚’åˆ¤å®šã™ã‚‹é–¢æ•°
 BOOL MouseInRange(int x1, int y1, int x2, int y2)
 {
 	if (MouseX >= x1 && MouseX <= x2 && MouseY >= y1 && MouseY <= y2)
@@ -80,22 +81,22 @@ BOOL MouseInRange(int x1, int y1, int x2, int y2)
 	}
 }
 
-// ƒ{ƒ^ƒ“‚ğ•\¦‚·‚éŠÖ”
+// ãƒœã‚¿ãƒ³ã‚’è¡¨ç¤ºã™ã‚‹é–¢æ•°
 BOOL DrawButton(int beginX, int beginY, int endX, int endY, unsigned int color, int mouseButton, const char* str = "", unsigned int strColor = 0, int fontHandle = NULL)
 {
 	int buttonX = endX - beginX;
 	int buttonY = endY - beginY;
 
-	// ƒ}ƒEƒX‚ªƒ{ƒ^ƒ“‚Ì”ÍˆÍ“à‚É‚ ‚é‚Æ‚«
+	// ãƒã‚¦ã‚¹ãŒãƒœã‚¿ãƒ³ã®ç¯„å›²å†…ã«ã‚ã‚‹ã¨ã
 	if (MouseInRange(beginX, beginY, endX, endY))
 	{
-		// ‘¤‚ğ•\¦
+		// å´ã‚’è¡¨ç¤º
 		DrawBox(beginX, beginY, endX, endY, color, FALSE);
 
-		// •¶š‚Ì•\¦
+		// æ–‡å­—ã®è¡¨ç¤º
 		DrawStringToHandle(beginX + (buttonX >> 1) - (FONT_SIZE >> 2), beginY + (buttonY >> 1) - (FONT_SIZE >> 1), str, color, fontHandle);
 
-		// w’è‚Ìƒ}ƒEƒXƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚çTRUE
+		// æŒ‡å®šã®ãƒã‚¦ã‚¹ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã‚‰TRUE
 		if (ClickMouse(mouseButton))
 		{
 			return TRUE;
@@ -103,20 +104,22 @@ BOOL DrawButton(int beginX, int beginY, int endX, int endY, unsigned int color, 
 	}
 	else
 	{
-		// ‘¤‚ğ•\¦i“§‰ßj
+		// å´ã‚’è¡¨ç¤ºï¼ˆé€éï¼‰
 		DrawBox(beginX, beginY, endX, endY, color, TRUE);
 
-		// •¶š‚Ì•\¦
+		// æ–‡å­—ã®è¡¨ç¤º
 		DrawStringToHandle(beginX + (buttonX >> 1) - (FONT_SIZE >> 2), beginY + (buttonY >> 1) - (FONT_SIZE >> 1), str, strColor, fontHandle);
 	}
 
 	return FALSE;
 }
 
-// ƒXƒNƒ[ƒ‹ƒo[‚ğ•\¦‚·‚éŠÖ”
-float DrawScrollBarWidth(int begin, int end, int place, int cursorSize, unsigned int color)
+// ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ã‚’è¡¨ç¤ºã™ã‚‹é–¢æ•°
+float DrawScrollBarWidth(int begin, int end, int place, int cursorSize, unsigned int color, float external)
 {
 	int length = end - begin;
+	float cursorLength;
+
 	static int cursorX = end - (length >> 1);
 	static int cursorY = place;
 
@@ -124,13 +127,13 @@ float DrawScrollBarWidth(int begin, int end, int place, int cursorSize, unsigned
 
 	DrawBox(begin - 4, place - 4, end + 4, place + 4, color, TRUE);
 
-	// ƒ}ƒEƒX‚ª‰Ÿ‚³‚ê‚Ä‚¢‚éó‘Ô‚©
+	// ãƒã‚¦ã‚¹ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹çŠ¶æ…‹ã‹
 	if (ClickMouse(0))
 	{
-		// ƒ{ƒ^ƒ“‚Ì”ÍˆÍ“à‚É‚ ‚é‚©
+		// ãƒœã‚¿ãƒ³ã®ç¯„å›²å†…ã«ã‚ã‚‹ã‹
 		if (MouseInRange(cursorX - cursorSize, cursorY - cursorSize, cursorX + cursorSize, cursorY + cursorSize))
 		{
-			// ¶ƒNƒŠƒbƒN‚µ‚½
+			// å·¦ã‚¯ãƒªãƒƒã‚¯ã—ãŸ
 			if (ClickMouse(0))
 			{
 				isMove = TRUE;
@@ -142,12 +145,12 @@ float DrawScrollBarWidth(int begin, int end, int place, int cursorSize, unsigned
 		isMove = FALSE;
 	}
 
-	// ƒJ[ƒ\ƒ‹‚ğƒ}ƒEƒX‚ÌXÀ•W‚É‡‚í‚¹‚é
+	// ã‚«ãƒ¼ã‚½ãƒ«ã‚’ãƒã‚¦ã‚¹ã®Xåº§æ¨™ã«åˆã‚ã›ã‚‹
 	if (isMove)
 	{
 		cursorX = MouseX;
 
-		// ”ÍˆÍŠO‚Éû‚ß‚é
+		// ç¯„å›²å¤–ã«åã‚ã‚‹
 		if (cursorX <= begin)
 		{
 			cursorX = begin;
@@ -158,119 +161,128 @@ float DrawScrollBarWidth(int begin, int end, int place, int cursorSize, unsigned
 			cursorX = end;
 		}
 	}
+	else
+	{
+		cursorX = (int)((float)length * external) + begin;
+	}
 
+	// ã‚«ãƒ¼ã‚½ãƒ«ã‚’è¡¨ç¤º
 	DrawCircle(cursorX, cursorY, cursorSize, color, TRUE);
 
-	return 0.0f;
+	// ãƒãƒ¼ã®å·¦ã¯ã˜ã‹ã‚‰ã‚«ãƒ¼ã‚½ãƒ«ã¾ã§ã®é•·ã•
+	cursorLength = cursorX - begin;
+
+	return cursorLength / (float)length;
 }
 
-// ƒƒCƒ“ŠÖ”
+// ãƒ¡ã‚¤ãƒ³é–¢æ•°
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	ChangeWindowMode(TRUE); // ƒEƒBƒ“ƒhƒEƒ‚[ƒh‚Éİ’è
-	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16); // ‰ğ‘œ“x‚Ì•ÏX
-	SetMainWindowText("ƒƒgƒƒm[ƒ€"); // ƒEƒBƒ“ƒhƒE‚Ìƒ^ƒCƒgƒ‹‚ğ•ÏX
+	ChangeWindowMode(TRUE); // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰ã«è¨­å®š
+	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16); // è§£åƒåº¦ã®å¤‰æ›´
+	SetMainWindowText("ãƒ¡ãƒˆãƒ­ãƒãƒ¼ãƒ "); // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚¿ã‚¤ãƒˆãƒ«ã‚’å¤‰æ›´
 
-	if (DxLib_Init() == -1) // DxLib‰Šú‰»
+	if (DxLib_Init() == -1) // DxLibåˆæœŸåŒ–
 	{
-		return -1;			// DxLib‰Šú‰»¸”s‚È‚çƒ\ƒtƒgI—¹
+		return -1;			// DxLibåˆæœŸåŒ–å¤±æ•—ãªã‚‰ã‚½ãƒ•ãƒˆçµ‚äº†
 	}
 
 	// ------------------------------------
-	// •Ï”’è‹`ƒ][ƒ“
+	// å¤‰æ•°å®šç¾©ã‚¾ãƒ¼ãƒ³
 	// ------------------------------------
 
-	// F
+	// è‰²
 	unsigned int colorBlack = GetColor(0, 0, 0);
 	unsigned int colorWhite = GetColor(255, 255, 255);
 	
-	// ŠÔ
-	int startTime;					// ƒQ[ƒ€ŠJnŠÔ‚ğ‹L˜^‚·‚é—p‚Ì•Ï”
-	int nowTime;					// ƒQ[ƒ€ŠJn‚©‚ç‚ÌŒo‰ßŠÔ‚ğ‹L˜^‚·‚é—p‚Ì•Ï”
+	// æ™‚é–“
+	int startTime;					// ã‚²ãƒ¼ãƒ é–‹å§‹æ™‚é–“ã‚’è¨˜éŒ²ã™ã‚‹ç”¨ã®å¤‰æ•°
+	int nowTime;					// ã‚²ãƒ¼ãƒ é–‹å§‹ã‹ã‚‰ã®çµŒéæ™‚é–“ã‚’è¨˜éŒ²ã™ã‚‹ç”¨ã®å¤‰æ•°
 
-	int oldTime = 0;				// 1ƒRƒ“ƒ}‘O‚ÌŠÔ‚ğ‹L˜^
+	int oldTime = 0;				// 1ã‚³ãƒ³ãƒå‰ã®æ™‚é–“ã‚’è¨˜éŒ²
 
-	int second;						// •b
-	int minute;						// •ª
+	int second;						// ç§’
+	int minute;						// åˆ†
 
 	int bpm = STANDARD_BPM;			// BPM
 
-	float bpmRatio = 1.0f;			// Šî€‚ÌBPM‚Æ‚Ì”ä—¦
+	float bpmRatio = 1.0f;			// åŸºæº–ã®BPMã¨ã®æ¯”ç‡
+	float bpmScroll = 1.0f; 		// BPMã®ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ã®æ¯”ç‡
 
-	// ƒL[ƒ{[ƒhî•ñ
-	char keyState[256];				// ƒL[ƒ{[ƒhî•ñ‚ğŠi”[‚·‚é”z—ñ
-	char oldKeyState[256];			// ‚Ğ‚Æ‚Â‘O‚ÌƒL[ƒ{[ƒhî•ñ‚ğŠi”[‚·‚é”z
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰æƒ…å ±
+	char keyState[256];				// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰æƒ…å ±ã‚’æ ¼ç´ã™ã‚‹é…åˆ—
+	char oldKeyState[256];			// ã²ã¨ã¤å‰ã®ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰æƒ…å ±ã‚’æ ¼ç´ã™ã‚‹é…
 
-	// ƒ}ƒEƒXî•ñ
-	BOOL isMouseLeft   = FALSE;		// ¶ƒNƒŠƒbƒN
-	BOOL isMouseMiddle = FALSE;		// ’†ƒNƒŠƒbƒN
-	BOOL isMouseRight  = FALSE;		// ‰EƒNƒŠƒbƒN
+	// ãƒã‚¦ã‚¹æƒ…å ±
+	BOOL isMouseLeft   = FALSE;		// å·¦ã‚¯ãƒªãƒƒã‚¯
+	BOOL isMouseMiddle = FALSE;		// ä¸­ã‚¯ãƒªãƒƒã‚¯
+	BOOL isMouseRight  = FALSE;		// å³ã‚¯ãƒªãƒƒã‚¯
 
-	// ‚Ğ‚Æ‚Â‘O‚Ìƒ}ƒEƒXî•ñ
-	BOOL isOldMouseLeft   = FALSE;	// ¶ƒNƒŠƒbƒN
-	BOOL isOldMouseMiddle = FALSE;	// ’†ƒNƒŠƒbƒN
-	BOOL isOldMouseRight  = FALSE;	// ‰EƒNƒŠƒbƒN
+	// ã²ã¨ã¤å‰ã®ãƒã‚¦ã‚¹æƒ…å ±
+	BOOL isOldMouseLeft   = FALSE;	// å·¦ã‚¯ãƒªãƒƒã‚¯
+	BOOL isOldMouseMiddle = FALSE;	// ä¸­ã‚¯ãƒªãƒƒã‚¯
+	BOOL isOldMouseRight  = FALSE;	// å³ã‚¯ãƒªãƒƒã‚¯
 
-	// ƒtƒ‰ƒO
-	BOOL isClick = FALSE;		// ƒNƒŠƒbƒN‚³‚ê‚½
+	// ãƒ•ãƒ©ã‚°
+	BOOL isClick = FALSE;		// ã‚¯ãƒªãƒƒã‚¯ã•ã‚ŒãŸ
 
-	// ƒtƒHƒ“ƒgƒnƒ“ƒhƒ‹
+	// ãƒ•ã‚©ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«
 	int buttonFontHandle = CreateFontToHandle("PixelMplus12", FONT_SIZE, FONT_THICK);
 
 	// ------------------------------------
-	// ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿
 	// ------------------------------------
 
-	// ƒI[ƒfƒBƒI
+	// ã‚ªãƒ¼ãƒ‡ã‚£ã‚ª
 	//int sound_wood_block;
 
-	int sound_wood_block = LoadSoundMem("Files/Audio/wood-block01.mp3"); // –Ø‹›‚Ì‰¹
+	int sound_wood_block = LoadSoundMem("Files/Audio/wood-block01.mp3"); // æœ¨é­šã®éŸ³
 
-	// ‰æ‘œ
+	// ç”»åƒ
 
-	// ‚Ğ‚Æ‚Â‘O‚ÌƒL[ƒ{[ƒhî•ñ‚ğŠi”[‚·‚é”z—ñ‚ğ‰Šú‰»
+	// ã²ã¨ã¤å‰ã®ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰æƒ…å ±ã‚’æ ¼ç´ã™ã‚‹é…åˆ—ã‚’åˆæœŸåŒ–
 	for (int key = 0; key < 256; key++)
 	{
 		oldKeyState[key] = 0;
 	}
 
-	// ƒ}ƒEƒXî•ñ
+	// ãƒã‚¦ã‚¹æƒ…å ±
 	SetMouseDispFlag(TRUE);
 
-	// ƒQ[ƒ€ŠJnŠÔ‚ğ“¾‚é
+	// ã‚²ãƒ¼ãƒ é–‹å§‹æ™‚é–“ã‚’å¾—ã‚‹
 	startTime = GetNowCount();
 
 	// ------------------------------------
-	// —”ŠÖŒW
+	// ä¹±æ•°é–¢ä¿‚
 	// ------------------------------------
 
-	// –ˆ‰ñˆá‚¤—”‚ğ¶¬
+	// æ¯å›é•ã†ä¹±æ•°ã‚’ç”Ÿæˆ
 	srand((unsigned int)time(NULL));
 
-	// ƒQ[ƒ€ƒ‹[ƒv
+	// ã‚²ãƒ¼ãƒ ãƒ«ãƒ¼ãƒ—
 	while (ProcessMessage() == 0)
 	{
-		// ƒQ[ƒ€ŠJn‚©‚ç‚ÌŒo‰ßŠÔ‚ğXV
+		// ã‚²ãƒ¼ãƒ é–‹å§‹ã‹ã‚‰ã®çµŒéæ™‚é–“ã‚’æ›´æ–°
 		nowTime = GetNowCount() - startTime;
 
 		second = nowTime / 1000;
 		minute = second / 60;
 
-		// Œ»İ‚ÌƒL[ƒ{[ƒh‚Ìó‘Ô‚ğXV
+		// ç¾åœ¨ã®ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã®çŠ¶æ…‹ã‚’æ›´æ–°
 		GetHitKeyStateAll(keyState);
 
-		// Œ»İ‚Ìƒ}ƒEƒX‚Ìî•ñ‚ğXV
+		// ç¾åœ¨ã®ãƒã‚¦ã‚¹ã®æƒ…å ±ã‚’æ›´æ–°
 		isMouseLeft = ClickMouse(0);
 		isMouseMiddle = ClickMouse(1);
 		isMouseRight = ClickMouse(2);
 
-		// ƒ}ƒEƒX‚ÌˆÊ’u‚ğæ“¾
+		// ãƒã‚¦ã‚¹ã®ä½ç½®ã‚’å–å¾—
 		GetMousePoint(&MouseX, &MouseY);
 
 		// ------------------------------------
-		// •`‰æˆ—
+		// æç”»å‡¦ç†
 		// ------------------------------------
-		ClearDrawScreen(); // ‰æ–Ê‚ğÄ‚«•¥‚¤
+		ClearDrawScreen(); // ç”»é¢ã‚’ç„¼ãæ‰•ã†
 
 		bpmRatio = (float)bpm / (float)STANDARD_BPM;
 
@@ -286,7 +298,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			*/
 		}
 
-		// ¶‚Ìƒ{ƒ^ƒ“
+		// å·¦ã®ãƒœã‚¿ãƒ³
 		if (DrawButton(SCREEN_WIDTH * 4 >> 4, SCREEN_HEIGHT * 10 >> 4,
 			SCREEN_WIDTH * 6 >> 4, SCREEN_HEIGHT * 12 >> 4,
 			colorWhite, 0, "-", colorBlack, buttonFontHandle))
@@ -296,12 +308,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				if (bpm > 0)
 				{
 					bpm--;
-					//printfDx("ƒNƒŠƒbƒNIIIII");
+					//printfDx("ã‚¯ãƒªãƒƒã‚¯ï¼ï¼ï¼ï¼ï¼");
 				}
 			}
 		}
 		
-		// ‰E‚Ìƒ{ƒ^ƒ“
+		// å³ã®ãƒœã‚¿ãƒ³
 		if (DrawButton(SCREEN_WIDTH * 10 >> 4, SCREEN_HEIGHT * 10 >> 4,
 			SCREEN_WIDTH * 12 >> 4, SCREEN_HEIGHT * 12 >> 4,
 			colorWhite, 0, "+", colorBlack, buttonFontHandle))
@@ -309,44 +321,48 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			if (!isOldMouseLeft)
 			{
 				bpm++;
-				//printfDx("ƒNƒŠƒbƒNIIIII");
+				//printfDx("ã‚¯ãƒªãƒƒã‚¯ï¼ï¼ï¼ï¼ï¼");
 			}
 		}
 
-		// ƒXƒNƒ[ƒ‹ƒo[
-		DrawScrollBarWidth(SCREEN_WIDTH >> 2, (SCREEN_WIDTH >> 2) * 3, SCREEN_HEIGHT >> 1, 16, colorWhite);
+		// BPMã®ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼
+		bpmScroll =  DrawScrollBarWidth(SCREEN_WIDTH >> 2, (SCREEN_WIDTH >> 2) * 3, SCREEN_HEIGHT >> 1, 16, colorWhite, (float)bpm / (float)MAX_BPM);
 
-		// ŠÈˆÕ‰æ–Ê•\¦
-		printfDx("%d•b\n", second);
+		// ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ã‹ã‚‰BPMã«ä»£å…¥
+		bpm = MAX_BPM * bpmScroll;
+
+		// ç°¡æ˜“ç”»é¢è¡¨ç¤º
+		printfDx("%dç§’\n", second);
 		printfDx("BPM %d\n", bpm);
-		printfDx("BPM‚Ì”ä—¦ %f\n", bpmRatio);
+		printfDx("BPMã®æ¯”ç‡ %f\n", bpmRatio);
 		printfDx("%f\n", 1000 / bpmRatio);
-		printfDx("ƒ}ƒEƒXƒJ[ƒ\ƒ‹ X %d Y %d\n", MouseX, MouseY);
+		printfDx("ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ« X %d Y %d\n", MouseX, MouseY);
+		printfDx("ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ« %f\n", bpmScroll);
 		
 		// ------------------------------------
-		// Œãˆ—
+		// å¾Œå‡¦ç†
 		// ------------------------------------
 
-		// ƒL[ƒ{[ƒh‚Ìî•ñ‚ğ•Û‘¶
+		// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã®æƒ…å ±ã‚’ä¿å­˜
 		for (int key = 0; key < 256; key++)
 		{
 			oldKeyState[key] = keyState[key];
 		}
 
-		// ƒ}ƒEƒX‚Ìî•ñ‚ğ•Û‘¶
+		// ãƒã‚¦ã‚¹ã®æƒ…å ±ã‚’ä¿å­˜
 		isOldMouseLeft = isMouseLeft;
 		isOldMouseMiddle = isMouseMiddle;
 		isOldMouseRight = isMouseRight;
 
 		oldTime = nowTime;
 
-		ScreenFlip(); // ‰ß‹‚ğ–Y‹p
+		ScreenFlip(); // éå»ã‚’å¿˜å´
 		
-		// ‰æ–Ê‚Ì•¶š’B‚ğÁ‚·
+		// ç”»é¢ã®æ–‡å­—é”ã‚’æ¶ˆã™
 		clsDx();
 	}
 
-	DxLib_End(); // DXƒ‰ƒCƒuƒ‰ƒŠg—p‚ÌI—¹ˆ—
+	DxLib_End(); // DXãƒ©ã‚¤ãƒ–ãƒ©ãƒªä½¿ç”¨ã®çµ‚äº†å‡¦ç†
 
-	return 0; // ƒ\ƒtƒgI—¹
+	return 0; // ã‚½ãƒ•ãƒˆçµ‚äº†
 }
