@@ -121,24 +121,34 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	unsigned int colorWhite = GetColor(255, 255, 255);
 	
 	// 時間
-	int startTime;			// ゲーム開始時間を記録する用の変数
-	int nowTime;			// ゲーム開始からの経過時間を記録する用の変数
+	int startTime;					// ゲーム開始時間を記録する用の変数
+	int nowTime;					// ゲーム開始からの経過時間を記録する用の変数
 
-	int oldTime = 0;		// 1コンマ前の時間を記録
+	int oldTime = 0;				// 1コンマ前の時間を記録
 
-	int second;				// 秒
-	int minute;				// 分
+	int second;						// 秒
+	int minute;						// 分
 
-	int bpm = STANDARD_BPM;	// BPM
+	int bpm = STANDARD_BPM;			// BPM
 
-	float bpmRatio = 1.0f;	// 基準のBPMとの比率
+	float bpmRatio = 1.0f;			// 基準のBPMとの比率
 
 	// キーボード情報
-	char keyState[256];		// キーボード情報を格納する配列
-	char oldKeyState[256];	// ひとつ前のキーボード情報を格納する配
+	char keyState[256];				// キーボード情報を格納する配列
+	char oldKeyState[256];			// ひとつ前のキーボード情報を格納する配
+
+	// マウス情報
+	BOOL isMouseLeft   = FALSE;		// 左クリック
+	BOOL isMouseMiddle = FALSE;		// 中クリック
+	BOOL isMouseRight  = FALSE;		// 右クリック
+
+	// ひとつ前のマウス情報
+	BOOL isOldMouseLeft   = FALSE;	// 左クリック
+	BOOL isOldMouseMiddle = FALSE;	// 中クリック
+	BOOL isOldMouseRight  = FALSE;	// 右クリック
 
 	// フラグ
-	BOOL isClick = FALSE;	// クリックされた
+	BOOL isClick = FALSE;		// クリックされた
 
 	// フォントハンドル
 	int buttonFontHandle = CreateFontToHandle("PixelMplus12", FONT_SIZE, FONT_THICK);
@@ -185,6 +195,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// 現在のキーボードの状態を更新
 		GetHitKeyStateAll(keyState);
 
+		// 現在のマウスの情報を更新
+		isMouseLeft = ClickMouse(0);
+		isMouseMiddle = ClickMouse(1);
+		isMouseRight = ClickMouse(2);
+
 		// マウスの位置を取得
 		GetMousePoint(&MouseX, &MouseY);
 
@@ -212,8 +227,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			SCREEN_WIDTH * 6 >> 4, SCREEN_HEIGHT * 12 >> 4,
 			colorWhite, 0, "-", colorBlack, buttonFontHandle))
 		{
-			bpm--;
-			//printfDx("クリック！！！！！");
+			if (!isOldMouseLeft)
+			{
+				bpm--;
+				//printfDx("クリック！！！！！");
+			}
 		}
 		
 		// 右のボタン
@@ -221,8 +239,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			SCREEN_WIDTH * 12 >> 4, SCREEN_HEIGHT * 12 >> 4,
 			colorWhite, 0, "+", colorBlack, buttonFontHandle))
 		{
-			bpm++;
-			//printfDx("クリック！！！！！");
+			if (!isOldMouseLeft)
+			{
+				bpm++;
+				//printfDx("クリック！！！！！");
+			}
 		}
 
 		// 簡易画面表示
@@ -241,6 +262,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		{
 			oldKeyState[key] = keyState[key];
 		}
+
+		// マウスの情報を保存
+		isOldMouseLeft = isMouseLeft;
+		isOldMouseMiddle = isMouseMiddle;
+		isOldMouseRight = isMouseRight;
 
 		oldTime = nowTime;
 
