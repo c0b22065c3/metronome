@@ -117,6 +117,8 @@ BOOL DrawButton(int beginX, int beginY, int endX, int endY, unsigned int color, 
 float DrawScrollBarWidth(int begin, int end, int place, int cursorSize, unsigned int color)
 {
 	int length = end - begin;
+	float cursorLength;
+
 	static int cursorX = end - (length >> 1);
 	static int cursorY = place;
 
@@ -159,9 +161,13 @@ float DrawScrollBarWidth(int begin, int end, int place, int cursorSize, unsigned
 		}
 	}
 
+	// カーソルを表示
 	DrawCircle(cursorX, cursorY, cursorSize, color, TRUE);
 
-	return 0.0f;
+	// バーの左はじからカーソルまでの長さ
+	cursorLength = cursorX - begin;
+
+	return cursorLength / (float)length;
 }
 
 // メイン関数
@@ -196,6 +202,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	int bpm = STANDARD_BPM;			// BPM
 
 	float bpmRatio = 1.0f;			// 基準のBPMとの比率
+	float bpmScroll = 1.0f; 		// BPMのスクロールバーの比率
 
 	// キーボード情報
 	char keyState[256];				// キーボード情報を格納する配列
@@ -314,7 +321,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 
 		// スクロールバー
-		DrawScrollBarWidth(SCREEN_WIDTH >> 2, (SCREEN_WIDTH >> 2) * 3, SCREEN_HEIGHT >> 1, 16, colorWhite);
+		bpmScroll =  DrawScrollBarWidth(SCREEN_WIDTH >> 2, (SCREEN_WIDTH >> 2) * 3, SCREEN_HEIGHT >> 1, 16, colorWhite);
 
 		// 簡易画面表示
 		printfDx("%d秒\n", second);
@@ -322,6 +329,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		printfDx("BPMの比率 %f\n", bpmRatio);
 		printfDx("%f\n", 1000 / bpmRatio);
 		printfDx("マウスカーソル X %d Y %d\n", MouseX, MouseY);
+		printfDx("スクロール %f\n", bpmScroll);
 		
 		// ------------------------------------
 		// 後処理
