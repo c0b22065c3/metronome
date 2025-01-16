@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\admin\\Documents\\GameProject\\",
+  "WorkspaceRootPath": "C:\\Users\\admin\\Documents\\Metronome\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{7C72CDB3-8EC4-43B0-90E7-55B371F51E99}|GameProject.vcxproj|C:\\Users\\admin\\Documents\\GameProject\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{7C72CDB3-8EC4-43B0-90E7-55B371F51E99}|GameProject.vcxproj|C:\\Users\\admin\\Documents\\Metronome\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{7C72CDB3-8EC4-43B0-90E7-55B371F51E99}|GameProject.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
@@ -20,11 +20,11 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "main.cpp",
-              "DocumentMoniker": "C:\\Users\\admin\\Documents\\GameProject\\main.cpp",
+              "DocumentMoniker": "C:\\Users\\admin\\Documents\\Metronome\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
-              "ToolTip": "C:\\Users\\admin\\Documents\\GameProject\\main.cpp",
+              "ToolTip": "C:\\Users\\admin\\Documents\\Metronome\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AQIAACcAAAAAAAAAAAAAADUAAAAlAAAA",
+              "ViewState": "AQIAAD8AAAAAAAAAAAAAAFIAAAB3AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-01-15T06:34:27.439Z",
               "EditorCaption": ""

@@ -8,6 +8,9 @@
 
 #define STANDARD_BPM	60	// 基準となるBPM = 60
 
+#define FONT_SIZE		64	// フォントのサイズ
+#define FONT_THICK		3	// フォントの太さ
+
 // ------------------------------------
 // グローバル変数定義ゾーン
 // ------------------------------------
@@ -65,13 +68,19 @@ BOOL ClickMouse(int button)
 }
 
 // ボタンを表示する関数
-BOOL DrawButton(int beginX, int beginY, int endX, int endY, unsigned int color, int mouseButton)
+BOOL DrawButton(int beginX, int beginY, int endX, int endY, unsigned int color, int mouseButton, const char* str, unsigned int strColor, int fontHandle)
 {
+	int buttonX = endX - beginX;
+	int buttonY = endY - beginY;
+
 	// マウスがボタンの範囲内にあるとき
 	if (MouseX >= beginX && MouseX <= endX && MouseY >= beginY && MouseY <= endY)
 	{
 		// 側を表示
 		DrawBox(beginX, beginY, endX, endY, color, FALSE);
+
+		// 文字の表示
+		DrawStringToHandle(beginX + (buttonX >> 1) - (FONT_SIZE >> 2), beginY + (buttonY >> 1) - (FONT_SIZE >> 1), str, color, fontHandle);
 
 		// 指定のマウスボタンが押されたらTRUE
 		if (ClickMouse(mouseButton))
@@ -83,6 +92,9 @@ BOOL DrawButton(int beginX, int beginY, int endX, int endY, unsigned int color, 
 	{
 		// 側を表示（透過）
 		DrawBox(beginX, beginY, endX, endY, color, TRUE);
+
+		// 文字の表示
+		DrawStringToHandle(beginX + (buttonX >> 1) - (FONT_SIZE >> 2), beginY + (buttonY >> 1) - (FONT_SIZE >> 1), str, strColor, fontHandle);
 	}
 
 	return FALSE;
@@ -105,6 +117,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// ------------------------------------
 
 	// 色
+	unsigned int colorBlack = GetColor(0, 0, 0);
 	unsigned int colorWhite = GetColor(255, 255, 255);
 	
 	// 時間
@@ -122,10 +135,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	// キーボード情報
 	char keyState[256];		// キーボード情報を格納する配列
-	char oldKeyState[256];	// ひとつ前のキーボード情報を格納する配列
+	char oldKeyState[256];	// ひとつ前のキーボード情報を格納する配
 
 	// フラグ
-	BOOL isClick = FALSE;	// 音がなったか
+	BOOL isClick = FALSE;	// 音がなったか列
+
+	// フォントハンドル
+	int buttonFontHandle = CreateFontToHandle("PixelMplus12", FONT_SIZE, FONT_THICK);
 
 	// ------------------------------------
 	// ファイルの読み込み
@@ -196,19 +212,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// 左のボタン
 		if (DrawButton(SCREEN_WIDTH * 4 >> 4, SCREEN_HEIGHT * 10 >> 4,
 			SCREEN_WIDTH * 6 >> 4, SCREEN_HEIGHT * 12 >> 4,
-			colorWhite, 0))
+			colorWhite, 0, "-", colorBlack, buttonFontHandle))
 		{
 			bpm--;
-			printfDx("クリック！！！！！");
+			//printfDx("クリック！！！！！");
 		}
 		
 		// 右のボタン
 		if (DrawButton(SCREEN_WIDTH * 10 >> 4, SCREEN_HEIGHT * 10 >> 4,
 			SCREEN_WIDTH * 12 >> 4, SCREEN_HEIGHT * 12 >> 4,
-			colorWhite, 0))
+			colorWhite, 0, "+", colorBlack, buttonFontHandle))
 		{
 			bpm++;
-			printfDx("クリック！！！！！");
+			//printfDx("クリック！！！！！");
 		}
 
 		// 簡易画面表示
