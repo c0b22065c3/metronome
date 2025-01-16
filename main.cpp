@@ -67,14 +67,27 @@ BOOL ClickMouse(int button)
 	}
 }
 
+// マウスが範囲内に入っているかを判定する関数
+BOOL MouseInRange(int x1, int y1, int x2, int y2)
+{
+	if (MouseX >= x1 && MouseX <= x2 && MouseY >= y1 && MouseY <= y2)
+	{
+		return TRUE;
+	}
+	else
+	{
+		return FALSE;
+	}
+}
+
 // ボタンを表示する関数
-BOOL DrawButton(int beginX, int beginY, int endX, int endY, unsigned int color, int mouseButton, const char* str, unsigned int strColor, int fontHandle)
+BOOL DrawButton(int beginX, int beginY, int endX, int endY, unsigned int color, int mouseButton, const char* str = "", unsigned int strColor = 0, int fontHandle = NULL)
 {
 	int buttonX = endX - beginX;
 	int buttonY = endY - beginY;
 
 	// マウスがボタンの範囲内にあるとき
-	if (MouseX >= beginX && MouseX <= endX && MouseY >= beginY && MouseY <= endY)
+	if (MouseInRange(beginX, beginY, endX, endY))
 	{
 		// 側を表示
 		DrawBox(beginX, beginY, endX, endY, color, FALSE);
@@ -98,6 +111,57 @@ BOOL DrawButton(int beginX, int beginY, int endX, int endY, unsigned int color, 
 	}
 
 	return FALSE;
+}
+
+// スクロールバーを表示する関数
+float DrawScrollBarWidth(int begin, int end, int place, int cursorSize, unsigned int color)
+{
+	int length = end - begin;
+	static int cursorX = end - (length >> 1);
+	static int cursorY = place;
+
+	static BOOL isMove = FALSE;
+
+	DrawBox(begin - 4, place - 4, end + 4, place + 4, color, TRUE);
+
+	// マウスが押されている状態か
+	if (ClickMouse(0))
+	{
+		// ボタンの範囲内にあるか
+		if (MouseInRange(cursorX - cursorSize, cursorY - cursorSize, cursorX + cursorSize, cursorY + cursorSize))
+		{
+			// 左クリックした
+			if (ClickMouse(0))
+			{
+				isMove = TRUE;
+			}
+		}
+	}
+	else
+	{
+		isMove = FALSE;
+	}
+
+	// カーソルをマウスのX座標に合わせる
+	if (isMove)
+	{
+		cursorX = MouseX;
+
+		// 範囲外に収める
+		if (cursorX <= begin)
+		{
+			cursorX = begin;
+		}
+
+		if (cursorX >= end)
+		{
+			cursorX = end;
+		}
+	}
+
+	DrawCircle(cursorX, cursorY, cursorSize, color, TRUE);
+
+	return 0.0f;
 }
 
 // メイン関数
@@ -248,6 +312,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				//printfDx("クリック！！！！！");
 			}
 		}
+
+		// スクロールバー
+		DrawScrollBarWidth(SCREEN_WIDTH >> 2, (SCREEN_WIDTH >> 2) * 3, SCREEN_HEIGHT >> 1, 16, colorWhite);
 
 		// 簡易画面表示
 		printfDx("%d秒\n", second);
