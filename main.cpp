@@ -229,8 +229,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		{
 			if (!isOldMouseLeft)
 			{
-				bpm--;
-				//printfDx("クリック！！！！！");
+				if (bpm > 0)
+				{
+					bpm--;
+					//printfDx("クリック！！！！！");
+				}
 			}
 		}
 		
