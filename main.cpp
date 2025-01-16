@@ -138,7 +138,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	char oldKeyState[256];	// ひとつ前のキーボード情報を格納する配
 
 	// フラグ
-	BOOL isClick = FALSE;	// 音がなったか列
+	BOOL isClick = FALSE;	// クリックされた
 
 	// フォントハンドル
 	int buttonFontHandle = CreateFontToHandle("PixelMplus12", FONT_SIZE, FONT_THICK);
@@ -205,8 +205,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				colorWhite, TRUE
 			);
 			*/
-
-			isClick = TRUE;
 		}
 
 		// 左のボタン
