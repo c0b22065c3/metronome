@@ -7,6 +7,7 @@
 #define SCREEN_HEIGHT	600
 
 #define STANDARD_BPM	60	// 基準となるBPM = 60
+#define MAX_BPM			400 // 最大BPM = 400
 
 #define FONT_SIZE		64	// フォントのサイズ
 #define FONT_THICK		3	// フォントの太さ
@@ -114,7 +115,7 @@ BOOL DrawButton(int beginX, int beginY, int endX, int endY, unsigned int color, 
 }
 
 // スクロールバーを表示する関数
-float DrawScrollBarWidth(int begin, int end, int place, int cursorSize, unsigned int color)
+float DrawScrollBarWidth(int begin, int end, int place, int cursorSize, unsigned int color, float external)
 {
 	int length = end - begin;
 	float cursorLength;
@@ -159,6 +160,10 @@ float DrawScrollBarWidth(int begin, int end, int place, int cursorSize, unsigned
 		{
 			cursorX = end;
 		}
+	}
+	else
+	{
+		cursorX = (int)((float)length * external) + begin;
 	}
 
 	// カーソルを表示
@@ -320,8 +325,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			}
 		}
 
-		// スクロールバー
-		bpmScroll =  DrawScrollBarWidth(SCREEN_WIDTH >> 2, (SCREEN_WIDTH >> 2) * 3, SCREEN_HEIGHT >> 1, 16, colorWhite);
+		// BPMのスクロールバー
+		bpmScroll =  DrawScrollBarWidth(SCREEN_WIDTH >> 2, (SCREEN_WIDTH >> 2) * 3, SCREEN_HEIGHT >> 1, 16, colorWhite, (float)bpm / (float)MAX_BPM);
+
+		// スクロールバーからBPMに代入
+		bpm = MAX_BPM * bpmScroll;
 
 		// 簡易画面表示
 		printfDx("%d秒\n", second);
